@@ -10,6 +10,8 @@ namespace ClinexSync.Domain.Professionals;
 
 public sealed class Professional
 {
+    private readonly List<AreaToWorkId> _areasToWork = [];
+
     private Professional(Guid id, Person person)
     {
         Id = id;
@@ -23,9 +25,7 @@ public sealed class Professional
     public Guid PersonId { get; set; }
     public Person Person { get; private set; }
     public string IdentityId { get; private set; }
-
-    private readonly IList<Guid> _areasToWork = [];
-    public IReadOnlyList<Guid> AreasToWork => _areasToWork.AsReadOnly();
+    public IReadOnlyList<AreaToWorkId> AreasToWork => _areasToWork.AsReadOnly();
 
     public static Result<Professional> Create(Person person)
     {

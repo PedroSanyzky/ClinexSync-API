@@ -21,10 +21,26 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
 
         builder.HasOne(p => p.Person).WithOne().HasForeignKey<Professional>(p => p.PersonId);
 
-        builder.HasMany<Area>(p => p.AreasToWork).WithMany();
-
         builder.Property(p => p.IdentityId).IsRequired(false);
 
         builder.HasIndex(p => p.IdentityId).IsUnique();
+
+        builder.OwnsMany(
+            p => p.AreasToWork,
+            atw =>
+            {
+                atw.ToTable("professionalAreasToWork");
+
+                atw.WithOwner().HasForeignKey("ProfessionalId");
+
+                atw.HasKey("Id");
+
+                atw.Property(a => a.Value).HasColumnName("AreaToWorkId").ValueGeneratedNever();
+            }
+        );
+
+        builder
+            .Metadata.FindNavigation(nameof(Professional.AreasToWork))!
+            .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }

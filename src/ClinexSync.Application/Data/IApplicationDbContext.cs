@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using ClinexSync.Domain.Administrators;
 using ClinexSync.Domain.Cities;
 using ClinexSync.Domain.Offices;
-using ClinexSync.Domain.Ofices;
 using ClinexSync.Domain.Pacients;
 using ClinexSync.Domain.Professionals;
 using ClinexSync.Domain.Shared;

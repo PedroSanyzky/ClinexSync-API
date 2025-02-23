@@ -6,11 +6,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ClinexSync.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class userPersons : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "areas",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_areas", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "cities",
                 columns: table => new
@@ -21,6 +33,18 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_cities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "offices",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_offices", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -38,6 +62,25 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                         name: "FK_districts_cities_CityId",
                         column: x => x.CityId,
                         principalTable: "cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "rooms",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Prefix = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_rooms", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_rooms_offices_OfficeId",
+                        column: x => x.OfficeId,
+                        principalTable: "offices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -137,6 +180,26 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "professionalAreasToWork",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AreaToWorkId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProfessionalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_professionalAreasToWork", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_professionalAreasToWork_professionals_ProfessionalId",
+                        column: x => x.ProfessionalId,
+                        principalTable: "professionals",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_administrators_IdentityId",
                 table: "administrators",
@@ -203,6 +266,11 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_professionalAreasToWork_ProfessionalId",
+                table: "professionalAreasToWork",
+                column: "ProfessionalId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_professionals_IdentityId",
                 table: "professionals",
                 column: "IdentityId",
@@ -214,6 +282,11 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                 table: "professionals",
                 column: "PersonId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_rooms_OfficeId",
+                table: "rooms",
+                column: "OfficeId");
         }
 
         /// <inheritdoc />
@@ -223,10 +296,22 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                 name: "administrators");
 
             migrationBuilder.DropTable(
+                name: "areas");
+
+            migrationBuilder.DropTable(
                 name: "pacients");
 
             migrationBuilder.DropTable(
+                name: "professionalAreasToWork");
+
+            migrationBuilder.DropTable(
+                name: "rooms");
+
+            migrationBuilder.DropTable(
                 name: "professionals");
+
+            migrationBuilder.DropTable(
+                name: "offices");
 
             migrationBuilder.DropTable(
                 name: "persons");

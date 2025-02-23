@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClinexSync.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250222041839_userPersons")]
-    partial class userPersons
+    [Migration("20250223210141_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace ClinexSync.Infrastructure.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ClinexSync.Domain.AdministratorAggregate.Administrator", b =>
+            modelBuilder.Entity("ClinexSync.Domain.Administrators.Administrator", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -49,7 +49,22 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                     b.ToTable("administrators", (string)null);
                 });
 
-            modelBuilder.Entity("ClinexSync.Domain.CityAggregate.City", b =>
+            modelBuilder.Entity("ClinexSync.Domain.Areas.Area", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("areas", (string)null);
+                });
+
+            modelBuilder.Entity("ClinexSync.Domain.Cities.City", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -67,7 +82,7 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                     b.ToTable("cities", (string)null);
                 });
 
-            modelBuilder.Entity("ClinexSync.Domain.CityAggregate.Entities.District", b =>
+            modelBuilder.Entity("ClinexSync.Domain.Cities.District", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,7 +102,42 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                     b.ToTable("districts", (string)null);
                 });
 
-            modelBuilder.Entity("ClinexSync.Domain.PacientAggregate.Pacient", b =>
+            modelBuilder.Entity("ClinexSync.Domain.Offices.Office", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("offices", (string)null);
+                });
+
+            modelBuilder.Entity("ClinexSync.Domain.Offices.Room", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OfficeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Prefix")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OfficeId");
+
+                    b.ToTable("rooms", (string)null);
+                });
+
+            modelBuilder.Entity("ClinexSync.Domain.Pacients.Pacient", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -111,7 +161,7 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                     b.ToTable("pacients", (string)null);
                 });
 
-            modelBuilder.Entity("ClinexSync.Domain.ProfessionalAggregate.Professional", b =>
+            modelBuilder.Entity("ClinexSync.Domain.Professionals.Professional", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -191,57 +241,93 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                     b.ToTable("persons", (string)null);
                 });
 
-            modelBuilder.Entity("ClinexSync.Domain.AdministratorAggregate.Administrator", b =>
+            modelBuilder.Entity("ClinexSync.Domain.Administrators.Administrator", b =>
                 {
                     b.HasOne("ClinexSync.Domain.Shared.Person", "Person")
                         .WithOne()
-                        .HasForeignKey("ClinexSync.Domain.AdministratorAggregate.Administrator", "PersonId")
+                        .HasForeignKey("ClinexSync.Domain.Administrators.Administrator", "PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("ClinexSync.Domain.CityAggregate.Entities.District", b =>
+            modelBuilder.Entity("ClinexSync.Domain.Cities.District", b =>
                 {
-                    b.HasOne("ClinexSync.Domain.CityAggregate.City", null)
+                    b.HasOne("ClinexSync.Domain.Cities.City", null)
                         .WithMany("Districts")
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ClinexSync.Domain.PacientAggregate.Pacient", b =>
+            modelBuilder.Entity("ClinexSync.Domain.Offices.Room", b =>
+                {
+                    b.HasOne("ClinexSync.Domain.Offices.Office", null)
+                        .WithMany("Rooms")
+                        .HasForeignKey("OfficeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ClinexSync.Domain.Pacients.Pacient", b =>
                 {
                     b.HasOne("ClinexSync.Domain.Shared.Person", "Person")
                         .WithOne()
-                        .HasForeignKey("ClinexSync.Domain.PacientAggregate.Pacient", "PersonId")
+                        .HasForeignKey("ClinexSync.Domain.Pacients.Pacient", "PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("ClinexSync.Domain.ProfessionalAggregate.Professional", b =>
+            modelBuilder.Entity("ClinexSync.Domain.Professionals.Professional", b =>
                 {
                     b.HasOne("ClinexSync.Domain.Shared.Person", "Person")
                         .WithOne()
-                        .HasForeignKey("ClinexSync.Domain.ProfessionalAggregate.Professional", "PersonId")
+                        .HasForeignKey("ClinexSync.Domain.Professionals.Professional", "PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.OwnsMany("ClinexSync.Domain.Professionals.AreaToWorkId", "AreasToWork", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<Guid>("ProfessionalId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<Guid>("Value")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("AreaToWorkId");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("ProfessionalId");
+
+                            b1.ToTable("professionalAreasToWork", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProfessionalId");
+                        });
+
+                    b.Navigation("AreasToWork");
 
                     b.Navigation("Person");
                 });
 
             modelBuilder.Entity("ClinexSync.Domain.Shared.Person", b =>
                 {
-                    b.HasOne("ClinexSync.Domain.CityAggregate.City", null)
+                    b.HasOne("ClinexSync.Domain.Cities.City", null)
                         .WithMany()
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ClinexSync.Domain.CityAggregate.Entities.District", null)
+                    b.HasOne("ClinexSync.Domain.Cities.District", null)
                         .WithMany()
                         .HasForeignKey("DistrictId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -290,9 +376,14 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ClinexSync.Domain.CityAggregate.City", b =>
+            modelBuilder.Entity("ClinexSync.Domain.Cities.City", b =>
                 {
                     b.Navigation("Districts");
+                });
+
+            modelBuilder.Entity("ClinexSync.Domain.Offices.Office", b =>
+                {
+                    b.Navigation("Rooms");
                 });
 #pragma warning restore 612, 618
         }

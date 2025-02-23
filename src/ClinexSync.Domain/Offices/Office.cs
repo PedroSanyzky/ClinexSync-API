@@ -9,11 +9,11 @@ namespace ClinexSync.Domain.Offices;
 
 public sealed class Office : Entity
 {
-    private Office() { }
+    private readonly List<Room> _rooms = [];
 
-    private readonly IList<Room> _rooms = [];
-    public IReadOnlyList<Room> Rooms => _rooms.AsReadOnly();
+    private Office() { }
 
     public Guid Id { get; private set; }
     public string Name { get; private set; }
+    public IReadOnlyList<Room> Rooms => _rooms.AsReadOnly();
 }
