@@ -115,9 +115,9 @@ public class CreateProfessionalCommandHandler
             professional.AddAreaToWorkId(area.Id);
         }
 
-        await _professionalRepository.InsertAsync(professionalResult.Value, cancellationToken);
+        await _professionalRepository.InsertAsync(professional, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result.Success(professionalResult.Value.Id);
+        return Result.Success(professional.Id);
     }
 }
