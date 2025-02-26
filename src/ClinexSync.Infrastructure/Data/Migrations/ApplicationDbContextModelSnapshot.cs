@@ -197,43 +197,15 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                     b.Property<Guid>("DistrictId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("DocumentNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FirstName")
+                    b.Property<string>("Genre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Genre")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("PersonId");
 
                     b.HasIndex("CityId");
 
                     b.HasIndex("DistrictId");
-
-                    b.HasIndex("DocumentNumber")
-                        .IsUnique();
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("Phone")
-                        .IsUnique();
 
                     b.ToTable("persons", (string)null);
                 });
@@ -288,12 +260,6 @@ namespace ClinexSync.Infrastructure.Data.Migrations
 
                     b.OwnsMany("ClinexSync.Domain.Professionals.AreaToWorkId", "AreasToWork", b1 =>
                         {
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
-
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
-
                             b1.Property<Guid>("ProfessionalId")
                                 .HasColumnType("uniqueidentifier");
 
@@ -301,9 +267,7 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                                 .HasColumnType("uniqueidentifier")
                                 .HasColumnName("AreaToWorkId");
 
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("ProfessionalId");
+                            b1.HasKey("ProfessionalId", "Value");
 
                             b1.ToTable("professionalAreasToWork", (string)null);
 
@@ -369,7 +333,121 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                                 .HasForeignKey("PersonId");
                         });
 
+                    b.OwnsOne("ClinexSync.Domain.Shared.DocumentNumber", "DocumentNumber", b1 =>
+                        {
+                            b1.Property<Guid>("PersonId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(450)")
+                                .HasColumnName("DocumentNumber");
+
+                            b1.HasKey("PersonId");
+
+                            b1.HasIndex("Value")
+                                .IsUnique();
+
+                            b1.ToTable("persons");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PersonId");
+                        });
+
+                    b.OwnsOne("ClinexSync.Domain.Shared.Email", "Email", b1 =>
+                        {
+                            b1.Property<Guid>("PersonId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(450)")
+                                .HasColumnName("Email");
+
+                            b1.HasKey("PersonId");
+
+                            b1.HasIndex("Value")
+                                .IsUnique();
+
+                            b1.ToTable("persons");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PersonId");
+                        });
+
+                    b.OwnsOne("ClinexSync.Domain.Shared.FirstName", "FirstName", b1 =>
+                        {
+                            b1.Property<Guid>("PersonId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("FirstName");
+
+                            b1.HasKey("PersonId");
+
+                            b1.ToTable("persons");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PersonId");
+                        });
+
+                    b.OwnsOne("ClinexSync.Domain.Shared.LastName", "LastName", b1 =>
+                        {
+                            b1.Property<Guid>("PersonId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("LastName");
+
+                            b1.HasKey("PersonId");
+
+                            b1.ToTable("persons");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PersonId");
+                        });
+
+                    b.OwnsOne("ClinexSync.Domain.Shared.Phone", "Phone", b1 =>
+                        {
+                            b1.Property<Guid>("PersonId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(450)")
+                                .HasColumnName("Phone");
+
+                            b1.HasKey("PersonId");
+
+                            b1.HasIndex("Value")
+                                .IsUnique();
+
+                            b1.ToTable("persons");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PersonId");
+                        });
+
                     b.Navigation("Address")
+                        .IsRequired();
+
+                    b.Navigation("DocumentNumber")
+                        .IsRequired();
+
+                    b.Navigation("Email")
+                        .IsRequired();
+
+                    b.Navigation("FirstName")
+                        .IsRequired();
+
+                    b.Navigation("LastName")
+                        .IsRequired();
+
+                    b.Navigation("Phone")
                         .IsRequired();
                 });
 

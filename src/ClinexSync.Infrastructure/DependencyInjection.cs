@@ -5,7 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using ClinexSync.Application.Data;
 using ClinexSync.Domain.Abstractions;
+using ClinexSync.Domain.Areas;
+using ClinexSync.Domain.Cities;
+using ClinexSync.Domain.Professionals;
+using ClinexSync.Domain.Shared;
 using ClinexSync.Infrastructure.Data;
+using ClinexSync.Infrastructure.Data.Repositories;
 using ClinexSync.Infrastructure.Time;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +49,11 @@ public static class DependencyInjection
         );
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
+
+        services.AddTransient<IPersonRepository, PersonRepository>();
+        services.AddTransient<ICityRepository, CityRepository>();
+        services.AddTransient<IAreaRepository, AreaRepository>();
+        services.AddTransient<IProfessionalRepository, ProfessionalRepository>();
 
         services.AddScoped<IApplicationDbContext>(sp =>
             sp.GetRequiredService<ApplicationDbContext>()

@@ -33,4 +33,9 @@ public sealed class Professional
 
         return Result.Success(professional);
     }
+
+    public void AddAreaToWorkId(Guid areaId)
+    {
+        _areasToWork.Add(new AreaToWorkId(areaId));
+    }
 }

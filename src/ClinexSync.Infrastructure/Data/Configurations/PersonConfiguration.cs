@@ -18,34 +18,46 @@ public class PersonConfiguration : IEntityTypeConfiguration<Person>
 
         builder.HasKey(p => p.PersonId);
 
-        builder
-            .Property(p => p.FirstName)
-            .HasConversion(firstName => firstName.Value, value => FirstName.Create(value).Value)
-            .IsRequired();
+        builder.OwnsOne(
+            p => p.FirstName,
+            f => f.Property(f => f.Value).IsRequired().HasColumnName("FirstName")
+        );
 
-        builder
-            .Property(p => p.LastName)
-            .HasConversion(lastName => lastName.Value, value => LastName.Create(value).Value)
-            .IsRequired();
+        builder.OwnsOne(
+            p => p.LastName,
+            l => l.Property(l => l.Value).IsRequired().HasColumnName("LastName")
+        );
 
-        builder
-            .Property(p => p.Phone)
-            .HasConversion(phone => phone.Value, value => Phone.Create(value).Value)
-            .IsRequired();
+        builder.OwnsOne(
+            p => p.Phone,
+            p =>
+            {
+                p.Property(phone => phone.Value).IsRequired().HasColumnName("Phone");
+                p.HasIndex(phone => phone.Value).IsUnique();
+            }
+        );
 
-        builder
-            .Property(p => p.DocumentNumber)
-            .HasConversion(document => document.Value, value => DocumentNumber.Create(value).Value)
-            .IsRequired();
+        builder.OwnsOne(
+            p => p.DocumentNumber,
+            d =>
+            {
+                d.Property(d => d.Value).IsRequired().HasColumnName("DocumentNumber");
+                d.HasIndex(d => d.Value).IsUnique();
+            }
+        );
 
-        builder
-            .Property(p => p.Email)
-            .HasConversion(email => email.Value, value => Email.Create(value).Value)
-            .IsRequired();
+        builder.OwnsOne(
+            p => p.Email,
+            e =>
+            {
+                e.Property(email => email.Value).IsRequired().HasColumnName("Email");
+                e.HasIndex(email => email.Value).IsUnique();
+            }
+        );
 
         builder.Property(p => p.BirthDay).IsRequired();
 
-        builder.Property(p => p.Genre).IsRequired();
+        builder.Property(p => p.Genre).IsRequired().HasConversion<string>();
 
         builder.OwnsOne(p => p.Address);
 
@@ -57,11 +69,32 @@ public class PersonConfiguration : IEntityTypeConfiguration<Person>
             .HasForeignKey(p => p.DistrictId)
             .OnDelete(DeleteBehavior.NoAction);
         ;
-
-        builder.HasIndex(p => p.DocumentNumber).IsUnique();
-
-        builder.HasIndex(p => p.Phone).IsUnique();
-
-        builder.HasIndex(p => p.Email).IsUnique();
     }
 }
+
+//EF Conversions ??
+
+//builder
+//    .Property(p => p.FirstName)
+//    .HasConversion(firstName => firstName.Value, value => FirstName.Create(value).Value)
+//    .IsRequired();
+
+//builder
+//    .Property(p => p.LastName)
+//    .HasConversion(lastName => lastName.Value, value => LastName.Create(value).Value)
+//    .IsRequired();
+
+//builder
+//    .Property(p => p.Phone)
+//    .HasConversion(phone => phone.Value, value => Phone.Create(value).Value)
+//    .IsRequired();
+
+//builder
+//    .Property(p => p.DocumentNumber)
+//    .HasConversion(document => document.Value, value => DocumentNumber.Create(value).Value)
+//    .IsRequired();
+
+//builder
+//    .Property(p => p.Email)
+//    .HasConversion(email => email.Value, value => Email.Create(value).Value)
+//    .IsRequired();

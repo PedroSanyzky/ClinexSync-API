@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClinexSync.Domain.Administrators;
+using ClinexSync.Domain.Areas;
 using ClinexSync.Domain.Cities;
 using ClinexSync.Domain.Offices;
 using ClinexSync.Domain.Pacients;
@@ -22,4 +23,5 @@ public interface IApplicationDbContext
     DbSet<Room> Rooms { get; }
     DbSet<City> Cities { get; }
     DbSet<District> Districts { get; }
+    DbSet<Area> Areas { get; }
 }

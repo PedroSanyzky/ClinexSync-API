@@ -8,10 +8,14 @@ namespace ClinexSync.Domain.Abstractions;
 
 public interface IRepository<T>
 {
-    Task<T> GetByIdAsync(string id);
-    Task<T> InsertAsync(T entity);
-    Task<T> UpdateAsync(T entity);
-    Task DeleteAsync(T entity);
-    Task<IEnumerable<T>> GetPagedAsync(int pageNumber, int pageSize);
-    Task<IEnumerable<T>> GetAllAsync();
+    Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task InsertAsync(T entity, CancellationToken cancellationToken);
+    Task UpdateAsync(T entity, CancellationToken cancellationToken);
+    Task DeleteAsync(T entity, CancellationToken cancellationToken);
+    Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken);
+    Task<IEnumerable<T>> GetPagedAsync(
+        int pageNumber,
+        int pageSize,
+        CancellationToken cancellationToken
+    );
 }

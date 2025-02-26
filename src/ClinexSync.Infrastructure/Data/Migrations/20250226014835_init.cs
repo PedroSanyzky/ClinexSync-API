@@ -16,36 +16,39 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_areas", x => x.Id);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "cities",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_cities", x => x.Id);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "offices",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_offices", x => x.Id);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "districts",
@@ -53,7 +56,7 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -63,8 +66,10 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                         column: x => x.CityId,
                         principalTable: "cities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "rooms",
@@ -72,7 +77,7 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Prefix = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    OfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -82,8 +87,10 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                         column: x => x.OfficeId,
                         principalTable: "offices",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "persons",
@@ -98,14 +105,17 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                     Address_Street1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address_Street2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address_City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address_PostalCode = table.Column<string>(
+                        type: "nvarchar(max)",
+                        nullable: false
+                    ),
                     Address_District = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address_IsBis = table.Column<bool>(type: "bit", nullable: false),
                     Address_DoorNumber = table.Column<int>(type: "int", nullable: false),
                     BirthDay = table.Column<DateOnly>(type: "date", nullable: false),
-                    Genre = table.Column<int>(type: "int", nullable: false),
+                    Genre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DistrictId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    DistrictId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -115,13 +125,16 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                         column: x => x.CityId,
                         principalTable: "cities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade
+                    );
                     table.ForeignKey(
                         name: "FK_persons_districts_DistrictId",
                         column: x => x.DistrictId,
                         principalTable: "districts",
-                        principalColumn: "Id");
-                });
+                        principalColumn: "Id"
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "administrators",
@@ -129,7 +142,7 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IdentityId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    IdentityId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -139,8 +152,10 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                         column: x => x.PersonId,
                         principalTable: "persons",
                         principalColumn: "PersonId",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "pacients",
@@ -148,7 +163,7 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IdentityId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    IdentityId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -158,8 +173,10 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                         column: x => x.PersonId,
                         principalTable: "persons",
                         principalColumn: "PersonId",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "professionals",
@@ -167,7 +184,7 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IdentityId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    IdentityId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -177,150 +194,154 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                         column: x => x.PersonId,
                         principalTable: "persons",
                         principalColumn: "PersonId",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "professionalAreasToWork",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     AreaToWorkId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ProfessionalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ProfessionalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_professionalAreasToWork", x => x.Id);
+                    table.PrimaryKey(
+                        "PK_professionalAreasToWork",
+                        x => new { x.ProfessionalId, x.AreaToWorkId }
+                    );
                     table.ForeignKey(
                         name: "FK_professionalAreasToWork_professionals_ProfessionalId",
                         column: x => x.ProfessionalId,
                         principalTable: "professionals",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_administrators_IdentityId",
                 table: "administrators",
                 column: "IdentityId",
                 unique: true,
-                filter: "[IdentityId] IS NOT NULL");
+                filter: "[IdentityId] IS NOT NULL"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_administrators_PersonId",
                 table: "administrators",
                 column: "PersonId",
-                unique: true);
+                unique: true
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_cities_Name",
                 table: "cities",
                 column: "Name",
-                unique: true);
+                unique: true
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_districts_CityId",
                 table: "districts",
-                column: "CityId");
+                column: "CityId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_pacients_IdentityId",
                 table: "pacients",
                 column: "IdentityId",
                 unique: true,
-                filter: "[IdentityId] IS NOT NULL");
+                filter: "[IdentityId] IS NOT NULL"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_pacients_PersonId",
                 table: "pacients",
                 column: "PersonId",
-                unique: true);
+                unique: true
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_persons_CityId",
                 table: "persons",
-                column: "CityId");
+                column: "CityId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_persons_DistrictId",
                 table: "persons",
-                column: "DistrictId");
+                column: "DistrictId"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_persons_DocumentNumber",
                 table: "persons",
                 column: "DocumentNumber",
-                unique: true);
+                unique: true
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_persons_Email",
                 table: "persons",
                 column: "Email",
-                unique: true);
+                unique: true
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_persons_Phone",
                 table: "persons",
                 column: "Phone",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_professionalAreasToWork_ProfessionalId",
-                table: "professionalAreasToWork",
-                column: "ProfessionalId");
+                unique: true
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_professionals_IdentityId",
                 table: "professionals",
                 column: "IdentityId",
                 unique: true,
-                filter: "[IdentityId] IS NOT NULL");
+                filter: "[IdentityId] IS NOT NULL"
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_professionals_PersonId",
                 table: "professionals",
                 column: "PersonId",
-                unique: true);
+                unique: true
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_rooms_OfficeId",
                 table: "rooms",
-                column: "OfficeId");
+                column: "OfficeId"
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "administrators");
+            migrationBuilder.DropTable(name: "administrators");
 
-            migrationBuilder.DropTable(
-                name: "areas");
+            migrationBuilder.DropTable(name: "areas");
 
-            migrationBuilder.DropTable(
-                name: "pacients");
+            migrationBuilder.DropTable(name: "pacients");
 
-            migrationBuilder.DropTable(
-                name: "professionalAreasToWork");
+            migrationBuilder.DropTable(name: "professionalAreasToWork");
 
-            migrationBuilder.DropTable(
-                name: "rooms");
+            migrationBuilder.DropTable(name: "rooms");
 
-            migrationBuilder.DropTable(
-                name: "professionals");
+            migrationBuilder.DropTable(name: "professionals");
 
-            migrationBuilder.DropTable(
-                name: "offices");
+            migrationBuilder.DropTable(name: "offices");
 
-            migrationBuilder.DropTable(
-                name: "persons");
+            migrationBuilder.DropTable(name: "persons");
 
-            migrationBuilder.DropTable(
-                name: "districts");
+            migrationBuilder.DropTable(name: "districts");
 
-            migrationBuilder.DropTable(
-                name: "cities");
+            migrationBuilder.DropTable(name: "cities");
         }
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClinexSync.Domain.Areas;
-using ClinexSync.Domain.Professionals;
+﻿using ClinexSync.Domain.Professionals;
 using ClinexSync.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -33,7 +27,7 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
 
                 atw.WithOwner().HasForeignKey("ProfessionalId");
 
-                atw.HasKey("Id");
+                atw.HasKey("ProfessionalId", "Value");
 
                 atw.Property(a => a.Value).HasColumnName("AreaToWorkId").ValueGeneratedNever();
             }

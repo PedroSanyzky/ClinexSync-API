@@ -7,7 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ApiResponses\" />
+    <Folder Include="Cities\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ClinexSync.Domain\ClinexSync.Domain.csproj" />
   </ItemGroup>
 
 </Project>

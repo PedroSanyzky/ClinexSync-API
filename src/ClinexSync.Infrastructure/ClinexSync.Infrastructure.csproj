@@ -22,8 +22,4 @@
     <ProjectReference Include="..\ClinexSync.Application\ClinexSync.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\Repositories\" />
-  </ItemGroup>
-
 </Project>

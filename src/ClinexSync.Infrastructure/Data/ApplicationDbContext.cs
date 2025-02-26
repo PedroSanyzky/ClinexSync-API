@@ -2,6 +2,7 @@
 using ClinexSync.Application.Data;
 using ClinexSync.Domain.Abstractions;
 using ClinexSync.Domain.Administrators;
+using ClinexSync.Domain.Areas;
 using ClinexSync.Domain.Cities;
 using ClinexSync.Domain.Offices;
 using ClinexSync.Domain.Pacients;
@@ -17,6 +18,7 @@ public sealed class ApplicationDbContext(
     IPublisher publisher
 ) : DbContext(options), IApplicationDbContext, IUnitOfWork
 {
+    public DbSet<Person> Persons { get; private set; }
     public DbSet<Pacient> Pacients { get; private set; }
     public DbSet<Administrator> Administrators { get; private set; }
     public DbSet<Professional> Professionals { get; private set; }
@@ -24,6 +26,7 @@ public sealed class ApplicationDbContext(
     public DbSet<Room> Rooms { get; private set; }
     public DbSet<City> Cities { get; private set; }
     public DbSet<District> Districts { get; private set; }
+    public DbSet<Area> Areas { get; private set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

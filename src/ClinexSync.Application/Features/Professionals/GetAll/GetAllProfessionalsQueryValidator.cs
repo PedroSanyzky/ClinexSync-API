@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClinexSync.Domain.Shared;
-
-public enum Genre
+namespace ClinexSync.Application.Features.Professionals.GetAll
 {
-    Male = 1,
-    Female = 2,
-    Other = 3,
+    class GetAllProfessionalsQueryValidator
+    {
+    }
 }
