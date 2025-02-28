@@ -15,6 +15,15 @@ public class AreaRepository(ApplicationDbContext dbContext) : IAreaRepository
         throw new NotImplementedException();
     }
 
+    public async Task<bool> ExistsAsync(string name, CancellationToken cancellationToken)
+    {
+        return await dbContext.Areas.FirstOrDefaultAsync(
+            a => a.Name.ToLower().Equals(name.ToLower()),
+            cancellationToken
+        )
+            is not null;
+    }
+
     public Task<IEnumerable<Area>> GetAllAsync(CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
@@ -34,9 +43,9 @@ public class AreaRepository(ApplicationDbContext dbContext) : IAreaRepository
         throw new NotImplementedException();
     }
 
-    public Task InsertAsync(Area entity, CancellationToken cancellationToken)
+    public async Task InsertAsync(Area entity, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await dbContext.Areas.AddAsync(entity, cancellationToken);
     }
 
     public Task UpdateAsync(Area entity, CancellationToken cancellationToken)

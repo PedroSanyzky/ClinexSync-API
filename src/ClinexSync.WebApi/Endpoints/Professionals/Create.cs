@@ -1,8 +1,6 @@
 ﻿using ClinexSync.Application.Features.Professionals.Create;
 using ClinexSync.Contracts.Professionals;
 using ClinexSync.Domain.Abstractions;
-using ClinexSync.Domain.Shared;
-using ClinexSync.WebApi.Extensions;
 using ClinexSync.WebApi.Handlers;
 using MediatR;
 

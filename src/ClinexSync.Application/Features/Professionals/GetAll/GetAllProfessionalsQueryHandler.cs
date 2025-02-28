@@ -38,7 +38,7 @@ public class GetAllProfessionalsQueryHandler
         if (!string.IsNullOrEmpty(request.FullName))
         {
             query = query.Where(p =>
-                $"{p.Person.FirstName.Value.ToLower() + " " + p.Person.LastName.Value.ToLower()}".Contains(
+                $"{p.Person.FirstName.Value.ToLower() + " " + p.Person.LastName.Value.ToLower()}".StartsWith(
                     request.FullName.ToLower()
                 )
             );
