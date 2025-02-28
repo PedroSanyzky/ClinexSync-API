@@ -54,12 +54,6 @@ public class GetProfessionalByIdQueryHandler
                         DoorNumber = professional.Person.Address.DoorNumber,
                     },
                 },
-                Areas = professional.AreasToWork.Join(
-                    _context.Areas,
-                    atw => atw.Value,
-                    a => a.Id,
-                    (atw, a) => new AreaResponse { Id = a.Id, Name = a.Name }
-                ),
             })
             .SingleOrDefaultAsync(cancellationToken);
 
