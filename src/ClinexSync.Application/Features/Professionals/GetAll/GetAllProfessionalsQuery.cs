@@ -10,9 +10,5 @@ using MediatR;
 
 namespace ClinexSync.Application.Features.Professionals.GetAll;
 
-public record GetAllProfessionalsQuery(
-    int PageNumber,
-    int PageSize,
-    string? firstName,
-    Guid? areaId
-) : IRequest<Result<Paginated<BasicProfessionalResponse>>> { }
+public record GetAllProfessionalsQuery(string? FullName, Guid? AreaId, int PageNumber, int PageSize)
+    : IRequest<Result<Paginated<BasicProfessionalResponse>>> { }

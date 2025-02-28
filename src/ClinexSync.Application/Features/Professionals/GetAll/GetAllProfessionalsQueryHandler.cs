@@ -8,6 +8,7 @@ using ClinexSync.Contracts.Professionals;
 using ClinexSync.Contracts.Shared;
 using ClinexSync.Domain.Abstractions;
 using ClinexSync.Domain.Professionals;
+using ClinexSync.Domain.Shared;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
@@ -31,18 +32,22 @@ public class GetAllProfessionalsQueryHandler
     {
         IQueryable<Professional> query = _context
             .Professionals.Include(p => p.Person)
+            .AsNoTracking()
             .AsQueryable();
 
-        if (!string.IsNullOrEmpty(request.firstName))
+        if (!string.IsNullOrEmpty(request.FullName))
         {
             query = query.Where(p =>
-                p.Person.FirstName.Value.ToLower().Contains(request.firstName.ToLower())
+                $"{p.Person.FirstName.Value.ToLower() + " " + p.Person.LastName.Value.ToLower()}".Contains(
+                    request.FullName.ToLower()
+                )
             );
         }
 
-        //if (request.areaId is not null) {
-        //    query = query.Where(p => p.AreasToWork.many);
-        //}
+        if (request.AreaId is not null)
+        {
+            query = query.Where(p => p.AreasToWork.Any(a => a.Value == request.AreaId));
+        }
 
         int totalCount = await query.CountAsync(cancellationToken);
 

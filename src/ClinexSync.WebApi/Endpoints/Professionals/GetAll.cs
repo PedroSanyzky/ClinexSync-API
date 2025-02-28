@@ -23,10 +23,10 @@ internal sealed class GetAll : IEndpoint
                 ) =>
                 {
                     var command = new GetAllProfessionalsQuery(
-                        pageNumber,
-                        pageSize,
                         firstName,
-                        areaId
+                        areaId,
+                        pageNumber,
+                        pageSize
                     );
 
                     Result<Paginated<BasicProfessionalResponse>> result = await sender.Send(
