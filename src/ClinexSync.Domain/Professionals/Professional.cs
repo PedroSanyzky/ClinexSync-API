@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClinexSync.Domain.Abstractions;
+﻿using ClinexSync.Domain.Abstractions;
+using ClinexSync.Domain.Areas;
 using ClinexSync.Domain.Shared;
 
 namespace ClinexSync.Domain.Professionals;
@@ -34,8 +30,21 @@ public sealed class Professional
         return Result.Success(professional);
     }
 
-    public void AddAreaToWorkId(Guid areaId)
+    public Result<AreaToWorkId> AddAreaToWork(Area area)
     {
-        _areasToWork.Add(new AreaToWorkId(areaId));
+        var newAreaToWork = new AreaToWorkId(area.Id);
+
+        if (_areasToWork.Any(area => area == newAreaToWork))
+        {
+            return Result.Failure<AreaToWorkId>(ProfessionalErrors.AreaAlreadyAssigned(area.Name));
+        }
+
+        _areasToWork.Add(newAreaToWork);
+        return Result.Success(newAreaToWork);
+    }
+
+    public void SetIdentityId(string identityId)
+    {
+        IdentityId = identityId;
     }
 }

@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClinexSync.Application.Data;
+﻿using ClinexSync.Application.Data;
 using ClinexSync.Contracts.Areas;
-using ClinexSync.Contracts.Professionals;
-using ClinexSync.Contracts.Shared;
 using ClinexSync.Domain.Abstractions;
 using ClinexSync.Domain.Areas;
-using ClinexSync.Domain.Professionals;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

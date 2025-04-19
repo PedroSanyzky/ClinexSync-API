@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClinexSync.Domain.Pacients;
+﻿using ClinexSync.Domain.Pacients;
+using ClinexSync.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -20,6 +16,8 @@ public class PacientConfiguration : IEntityTypeConfiguration<Pacient>
         builder.HasOne(p => p.Person).WithOne().HasForeignKey<Pacient>(p => p.PersonId);
 
         builder.Property(p => p.IdentityId).IsRequired(false);
+
+        builder.HasOne<User>().WithOne().HasForeignKey<Pacient>(p => p.IdentityId);
 
         builder.HasIndex(p => p.IdentityId).IsUnique();
     }

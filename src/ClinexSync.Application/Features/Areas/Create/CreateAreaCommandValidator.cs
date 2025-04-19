@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClinexSync.Domain.Areas;
-using ClinexSync.Domain.Shared;
+﻿using ClinexSync.Domain.Areas;
 using FluentValidation;
 
 namespace ClinexSync.Application.Features.Areas.Create;

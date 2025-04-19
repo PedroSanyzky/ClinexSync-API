@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClinexSync.Application.Behaviors;
+﻿using ClinexSync.Application.Behaviors;
 using ClinexSync.Application.Services.Persons;
+using ClinexSync.Application.Services.Users;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,7 +21,8 @@ public static class DependencyInjection
             includeInternalTypes: true
         );
 
-        services.AddTransient<IPersonValidationService, PersonValidationService>();
+        services.AddTransient<IPersonFactoryService, PersonFactoryService>();
+        services.AddTransient<IUserService, UserService>();
 
         return services;
     }

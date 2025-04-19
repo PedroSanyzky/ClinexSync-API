@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClinexSync.Domain.Abstractions;
-using ClinexSync.Domain.Shared;
+﻿using ClinexSync.Domain.Abstractions;
 using MediatR;
 
 namespace ClinexSync.Application.Features.Professionals.Create;
@@ -12,8 +6,8 @@ namespace ClinexSync.Application.Features.Professionals.Create;
 public record CreateProfessionalCommand(
     string FirstName,
     string LastName,
-    string phone,
-    string documentNumber,
+    string Phone,
+    string DocumentNumber,
     string Email,
     string Street1,
     string Street2,
@@ -22,7 +16,7 @@ public record CreateProfessionalCommand(
     int DoorNumber,
     DateOnly BirthDay,
     string Genre,
-    Guid cityId,
-    Guid districtId,
+    Guid CityId,
+    Guid DistrictId,
     Guid[] AreasToWork
 ) : IRequest<Result<Guid>> { }

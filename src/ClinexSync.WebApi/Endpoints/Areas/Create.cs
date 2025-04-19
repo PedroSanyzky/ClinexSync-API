@@ -25,6 +25,7 @@ internal sealed class Create : IEndpoint
                     return ResultsHandler.CustomResponse(result);
                 }
             )
-            .WithTags(Tags.Areas);
+            .WithTags(Tags.Areas)
+            .RequireAuthorization();
     }
 }

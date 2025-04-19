@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClinexSync.Domain.Shared;
+﻿using ClinexSync.Domain.Shared;
 using FluentValidation;
 
 namespace ClinexSync.Application.Features.Professionals.Create;
@@ -32,12 +27,12 @@ public class CreateProfessionalCommandValidator : AbstractValidator<CreateProfes
             .WithMessage(PersonErrors.EmailInvalidFormat().Description)
             .WithErrorCode(PersonErrors.EmailInvalidFormat().Code);
 
-        RuleFor(p => p.documentNumber)
+        RuleFor(p => p.DocumentNumber)
             .NotEmpty()
             .WithMessage(PersonErrors.DocumentNumberEmpty().Description)
             .WithErrorCode(PersonErrors.DocumentNumberEmpty().Code);
 
-        RuleFor(p => p.phone)
+        RuleFor(p => p.Phone)
             .NotEmpty()
             .WithMessage(PersonErrors.PhoneEmpty().Description)
             .WithErrorCode(PersonErrors.PhoneEmpty().Code);
@@ -55,7 +50,7 @@ public class CreateProfessionalCommandValidator : AbstractValidator<CreateProfes
             .WithMessage(PersonErrors.InvalidGenre().Description)
             .WithErrorCode(PersonErrors.InvalidGenre().Code);
 
-        RuleFor(p => p.cityId).NotEmpty();
-        RuleFor(p => p.districtId).NotEmpty();
+        RuleFor(p => p.CityId).NotEmpty();
+        RuleFor(p => p.DistrictId).NotEmpty();
     }
 }

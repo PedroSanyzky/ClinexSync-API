@@ -1,5 +1,3 @@
 ﻿namespace ClinexSync.WebApi.Endpoints.Cities;
 
-public class GetDistricts
-{
-}
+public class GetDistricts { }

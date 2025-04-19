@@ -1,12 +1,13 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ClinexSync.Infrastructure.Data.Migrations
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
+namespace ClinexSync.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class authentication : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,6 +52,19 @@ namespace ClinexSync.Infrastructure.Data.Migrations
             );
 
             migrationBuilder.CreateTable(
+                name: "roles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_roles", x => x.Id);
+                }
+            );
+
+            migrationBuilder.CreateTable(
                 name: "districts",
                 columns: table => new
                 {
@@ -86,6 +100,28 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                         name: "FK_rooms_offices_OfficeId",
                         column: x => x.OfficeId,
                         principalTable: "offices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
+
+            migrationBuilder.CreateTable(
+                name: "users",
+                columns: table => new
+                {
+                    IdentityId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_users", x => x.IdentityId);
+                    table.ForeignKey(
+                        name: "FK_users_roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade
                     );
@@ -154,6 +190,12 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                         principalColumn: "PersonId",
                         onDelete: ReferentialAction.Cascade
                     );
+                    table.ForeignKey(
+                        name: "FK_administrators_users_IdentityId",
+                        column: x => x.IdentityId,
+                        principalTable: "users",
+                        principalColumn: "IdentityId"
+                    );
                 }
             );
 
@@ -175,6 +217,12 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                         principalColumn: "PersonId",
                         onDelete: ReferentialAction.Cascade
                     );
+                    table.ForeignKey(
+                        name: "FK_pacients_users_IdentityId",
+                        column: x => x.IdentityId,
+                        principalTable: "users",
+                        principalColumn: "IdentityId"
+                    );
                 }
             );
 
@@ -195,6 +243,12 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                         principalTable: "persons",
                         principalColumn: "PersonId",
                         onDelete: ReferentialAction.Cascade
+                    );
+                    table.ForeignKey(
+                        name: "FK_professionals_users_IdentityId",
+                        column: x => x.IdentityId,
+                        principalTable: "users",
+                        principalColumn: "IdentityId"
                     );
                 }
             );
@@ -219,6 +273,17 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade
                     );
+                }
+            );
+
+            migrationBuilder.InsertData(
+                table: "roles",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Administrator" },
+                    { 2, "Pacient" },
+                    { 3, "Professional" },
                 }
             );
 
@@ -314,10 +379,26 @@ namespace ClinexSync.Infrastructure.Data.Migrations
             );
 
             migrationBuilder.CreateIndex(
+                name: "IX_roles_Name",
+                table: "roles",
+                column: "Name",
+                unique: true
+            );
+
+            migrationBuilder.CreateIndex(
                 name: "IX_rooms_OfficeId",
                 table: "rooms",
                 column: "OfficeId"
             );
+
+            migrationBuilder.CreateIndex(
+                name: "IX_users_IdentityId",
+                table: "users",
+                column: "IdentityId",
+                unique: true
+            );
+
+            migrationBuilder.CreateIndex(name: "IX_users_RoleId", table: "users", column: "RoleId");
         }
 
         /// <inheritdoc />
@@ -339,7 +420,11 @@ namespace ClinexSync.Infrastructure.Data.Migrations
 
             migrationBuilder.DropTable(name: "persons");
 
+            migrationBuilder.DropTable(name: "users");
+
             migrationBuilder.DropTable(name: "districts");
+
+            migrationBuilder.DropTable(name: "roles");
 
             migrationBuilder.DropTable(name: "cities");
         }

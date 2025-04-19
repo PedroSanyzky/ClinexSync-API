@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClinexSync.Application.Services.Persons;
+﻿using ClinexSync.Application.Services.Persons;
+using ClinexSync.Application.Services.Users;
 using ClinexSync.Domain.Abstractions;
 using ClinexSync.Domain.Areas;
 using ClinexSync.Domain.Cities;
 using ClinexSync.Domain.Professionals;
 using ClinexSync.Domain.Shared;
+using ClinexSync.Domain.Users;
 using MediatR;
 
 namespace ClinexSync.Application.Features.Professionals.Create;
@@ -17,24 +14,27 @@ public class CreateProfessionalCommandHandler
     : IRequestHandler<CreateProfessionalCommand, Result<Guid>>
 {
     private readonly IProfessionalRepository _professionalRepository;
-    private readonly IPersonValidationService _personValidationService;
+    private readonly IPersonFactoryService _personFactoryService;
     private readonly ICityRepository _cityRepository;
     private readonly IAreaRepository _areaRepository;
+    private readonly IUserService _userService;
     private readonly IUnitOfWork _unitOfWork;
 
     public CreateProfessionalCommandHandler(
         IProfessionalRepository professionalRepository,
-        IPersonValidationService personValidationService,
+        IPersonFactoryService personValidationService,
         ICityRepository cityRepository,
         IAreaRepository areaRepository,
+        IUserService userService,
         IUnitOfWork unitOfWork
     )
     {
         _professionalRepository = professionalRepository;
-        _personValidationService = personValidationService;
+        _personFactoryService = personValidationService;
         _cityRepository = cityRepository;
         _areaRepository = areaRepository;
         _unitOfWork = unitOfWork;
+        _userService = userService;
     }
 
     public async Task<Result<Guid>> Handle(
@@ -42,82 +42,109 @@ public class CreateProfessionalCommandHandler
         CancellationToken cancellationToken
     )
     {
-        City? city = await _cityRepository.GetByIdAsync(request.cityId, cancellationToken);
+        var validationCitiesResult = await ValidateCitiesAsync(
+            request.CityId,
+            request.DistrictId,
+            cancellationToken
+        );
 
-        if (city is null)
-        {
-            return Result.Failure<Guid>(CityErrors.CityNotFound(request.cityId));
-        }
+        if (validationCitiesResult.IsFailure)
+            return Result.Failure<Guid>(validationCitiesResult.Error);
 
-        District? district = city.Districts.FirstOrDefault(d => d.Id == request.districtId);
+        var (city, district) = validationCitiesResult.Value;
 
-        if (district is null)
-        {
-            return Result.Failure<Guid>(CityErrors.DistrictNotFound(request.districtId));
-        }
-
-        Result<Person> personResult = _personValidationService.CreatePerson(
+        Result<Person> personResult = await _personFactoryService.CreatePersonAsync(
             request.FirstName,
             request.LastName,
-            request.phone,
-            request.documentNumber,
+            request.Phone,
+            request.DocumentNumber,
             request.Email,
             request.BirthDay,
             request.Genre,
-            request.cityId,
-            request.districtId,
+            request.CityId,
+            request.DistrictId,
             request.Street1,
             request.Street2,
             city.Name,
             request.PostalCode,
             district.Name,
             request.IsBis,
-            request.DoorNumber
-        );
-
-        if (personResult.IsFailure)
-        {
-            return Result.Failure<Guid>(personResult.Error);
-        }
-
-        Person person = personResult.Value;
-
-        Result personExistsResult = await _personValidationService.PersonExists(
-            person.Email.Value,
-            person.DocumentNumber.Value,
-            person.Phone.Value,
+            request.DoorNumber,
             cancellationToken
         );
 
-        if (personExistsResult.IsFailure)
-        {
-            return Result.Failure<Guid>(personExistsResult.Error);
-        }
+        if (personResult.IsFailure)
+            return Result.Failure<Guid>(personResult.Error);
 
-        Result<Professional> professionalResult = Professional.Create(person);
+        Result<Professional> professionalResult = Professional.Create(personResult.Value);
 
         if (professionalResult.IsFailure)
-        {
             return Result.Failure<Guid>(professionalResult.Error);
-        }
 
-        Professional professional = professionalResult.Value;
+        Result addAreasResult = await AddAreasToProfessionalAsync(
+            request.AreasToWork,
+            professionalResult.Value,
+            cancellationToken
+        );
 
-        foreach (Guid areaId in request.AreasToWork)
+        if (addAreasResult.IsFailure)
+            return Result.Failure<Guid>(addAreasResult.Error);
+
+        Result<User> userResult = await _userService.CreateUserAsync(
+            personResult.Value,
+            Role.Professional,
+            cancellationToken
+        );
+
+        if (userResult.IsFailure)
+            return Result.Failure<Guid>(userResult.Error);
+
+        professionalResult.Value.SetIdentityId(userResult.Value.IdentityId);
+
+        await _professionalRepository.InsertAsync(professionalResult.Value, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return Result.Success(professionalResult.Value.Id);
+    }
+
+    private async Task<Result<(City, District)>> ValidateCitiesAsync(
+        Guid cityId,
+        Guid districtId,
+        CancellationToken cancellationToken
+    )
+    {
+        City? city = await _cityRepository.GetByIdAsync(cityId, cancellationToken);
+
+        if (city is null)
+            return Result.Failure<(City, District)>(CityErrors.CityNotFound(cityId));
+
+        District? district = city.Districts.FirstOrDefault(d => d.Id == districtId);
+
+        if (district is null)
+            return Result.Failure<(City, District)>(CityErrors.DistrictNotFound(districtId));
+
+        return Result.Success((city, district));
+    }
+
+    private async Task<Result> AddAreasToProfessionalAsync(
+        IEnumerable<Guid> areasToWork,
+        Professional professional,
+        CancellationToken cancellationToken
+    )
+    {
+        foreach (Guid areaId in areasToWork)
         {
             Area? area = await _areaRepository.GetByIdAsync(areaId, cancellationToken);
 
             if (area is null)
-            {
-                return Result.Failure<Guid>(AreaErrors.NotFound(areaId));
-            }
+                return Result.Failure(AreaErrors.NotFound(areaId));
 
-            professional.AddAreaToWorkId(area.Id);
+            Result<AreaToWorkId> addAreaResult = professional.AddAreaToWork(area);
+
+            if (addAreaResult.IsFailure)
+                return Result.Failure(addAreaResult.Error);
         }
 
-        await _professionalRepository.InsertAsync(professional, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-        return Result.Success(professional.Id);
+        return Result.Success();
     }
 }

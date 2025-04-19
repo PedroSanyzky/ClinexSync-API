@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClinexSync.Domain.Areas;
+﻿using ClinexSync.Domain.Areas;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClinexSync.Infrastructure.Data.Repositories;

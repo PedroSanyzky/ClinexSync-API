@@ -1,5 +1,4 @@
 ﻿using ClinexSync.Application.Data;
-using ClinexSync.Contracts.Areas;
 using ClinexSync.Contracts.Persons;
 using ClinexSync.Contracts.Professionals;
 using ClinexSync.Domain.Abstractions;
@@ -37,7 +36,7 @@ public class GetProfessionalByIdQueryHandler
                     FirstName = professional.Person.FirstName.Value,
                     LastName = professional.Person.LastName.Value,
                     Phone = professional.Person.Phone.Value,
-                    DocumentNumber = professional.Person.FirstName.Value,
+                    DocumentNumber = professional.Person.DocumentNumber.Value,
                     Email = professional.Person.Email.Value,
                     BirthDay = professional.Person.BirthDay,
                     Genre = professional.Person.Genre.ToString(),

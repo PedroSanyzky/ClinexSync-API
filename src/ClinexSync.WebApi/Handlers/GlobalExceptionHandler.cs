@@ -1,6 +1,5 @@
 ﻿using ClinexSync.Contracts.API;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ClinexSync.WebApi.Handlers;
 
@@ -13,6 +12,20 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
         CancellationToken cancellationToken
     )
     {
+        if (exception is BadHttpRequestException jsonEx)
+        {
+            var problemExceptionDetails = ApiResponse<object>.Error(
+                "Request body is invalid.",
+                StatusCodes.Status400BadRequest,
+                "Please check it.",
+                null
+            );
+
+            httpContext.Response.StatusCode = problemExceptionDetails.Status;
+            await httpContext.Response.WriteAsJsonAsync(problemExceptionDetails, cancellationToken);
+            return true;
+        }
+
         logger.LogError(exception, "Unhandled exception occurred");
 
         var problemDetails = ApiResponse<object>.Error(

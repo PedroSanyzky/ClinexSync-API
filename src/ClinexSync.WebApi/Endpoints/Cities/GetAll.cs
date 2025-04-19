@@ -1,5 +1,3 @@
 ﻿namespace ClinexSync.WebApi.Endpoints.Cities;
 
-public class GetAll
-{
-}
+public class GetAll { }

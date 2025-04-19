@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ClinexSync.Contracts.Persons;
+﻿namespace ClinexSync.Contracts.Persons;
 
 public sealed class PersonResponse
 {

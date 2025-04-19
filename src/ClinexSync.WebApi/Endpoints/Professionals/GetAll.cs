@@ -37,6 +37,7 @@ internal sealed class GetAll : IEndpoint
                     return ResultsHandler.CustomPaginatedResponse(result);
                 }
             )
-            .WithTags(Tags.Professionals);
+            .WithTags(Tags.Professionals)
+            .RequireAuthorization();
     }
 }

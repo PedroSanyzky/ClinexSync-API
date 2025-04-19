@@ -1,9 +1,4 @@
 ﻿using ClinexSync.Domain.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClinexSync.Domain.Shared;
 
@@ -22,5 +17,4 @@ public record LastName
 
         return Result.Success(new LastName(value));
     }
-
 }

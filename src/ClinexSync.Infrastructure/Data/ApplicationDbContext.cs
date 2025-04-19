@@ -8,6 +8,7 @@ using ClinexSync.Domain.Offices;
 using ClinexSync.Domain.Pacients;
 using ClinexSync.Domain.Professionals;
 using ClinexSync.Domain.Shared;
+using ClinexSync.Domain.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,8 @@ public sealed class ApplicationDbContext(
     IPublisher publisher
 ) : DbContext(options), IApplicationDbContext, IUnitOfWork
 {
+    public DbSet<User> Users { get; private set; }
+    public DbSet<Role> Roles { get; private set; }
     public DbSet<Person> Persons { get; private set; }
     public DbSet<Pacient> Pacients { get; private set; }
     public DbSet<Administrator> Administrators { get; private set; }

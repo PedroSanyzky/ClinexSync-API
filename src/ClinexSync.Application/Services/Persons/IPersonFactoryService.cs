@@ -1,24 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using ClinexSync.Domain.Abstractions;
+﻿using ClinexSync.Domain.Abstractions;
 using ClinexSync.Domain.Shared;
 
 namespace ClinexSync.Application.Services.Persons;
 
-public interface IPersonValidationService
+public interface IPersonFactoryService
 {
-    Task<Result> PersonExists(
-        string email,
-        string documentNumber,
-        string phone,
-        CancellationToken cancellationToken
-    );
-
-    Result<Person> CreatePerson(
+    Task<Result<Person>> CreatePersonAsync(
         string firstName,
         string lastName,
         string phone,
@@ -34,6 +21,7 @@ public interface IPersonValidationService
         string PostalCode,
         string District,
         bool IsBis,
-        int DoorNumber
+        int DoorNumber,
+        CancellationToken cancellationToken
     );
 }

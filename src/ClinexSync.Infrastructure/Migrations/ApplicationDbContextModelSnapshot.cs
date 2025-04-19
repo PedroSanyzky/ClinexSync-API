@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ClinexSync.Infrastructure.Data.Migrations
+namespace ClinexSync.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -210,8 +210,72 @@ namespace ClinexSync.Infrastructure.Data.Migrations
                     b.ToTable("persons", (string)null);
                 });
 
+            modelBuilder.Entity("ClinexSync.Domain.Users.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 2,
+                            Name = "Pacient"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Professional"
+                        },
+                        new
+                        {
+                            Id = 1,
+                            Name = "Administrator"
+                        });
+                });
+
+            modelBuilder.Entity("ClinexSync.Domain.Users.User", b =>
+                {
+                    b.Property<string>("IdentityId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdentityId");
+
+                    b.HasIndex("IdentityId")
+                        .IsUnique();
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("users", (string)null);
+                });
+
             modelBuilder.Entity("ClinexSync.Domain.Administrators.Administrator", b =>
                 {
+                    b.HasOne("ClinexSync.Domain.Users.User", null)
+                        .WithOne()
+                        .HasForeignKey("ClinexSync.Domain.Administrators.Administrator", "IdentityId");
+
                     b.HasOne("ClinexSync.Domain.Shared.Person", "Person")
                         .WithOne()
                         .HasForeignKey("ClinexSync.Domain.Administrators.Administrator", "PersonId")
@@ -241,6 +305,10 @@ namespace ClinexSync.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("ClinexSync.Domain.Pacients.Pacient", b =>
                 {
+                    b.HasOne("ClinexSync.Domain.Users.User", null)
+                        .WithOne()
+                        .HasForeignKey("ClinexSync.Domain.Pacients.Pacient", "IdentityId");
+
                     b.HasOne("ClinexSync.Domain.Shared.Person", "Person")
                         .WithOne()
                         .HasForeignKey("ClinexSync.Domain.Pacients.Pacient", "PersonId")
@@ -252,6 +320,10 @@ namespace ClinexSync.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("ClinexSync.Domain.Professionals.Professional", b =>
                 {
+                    b.HasOne("ClinexSync.Domain.Users.User", null)
+                        .WithOne()
+                        .HasForeignKey("ClinexSync.Domain.Professionals.Professional", "IdentityId");
+
                     b.HasOne("ClinexSync.Domain.Shared.Person", "Person")
                         .WithOne()
                         .HasForeignKey("ClinexSync.Domain.Professionals.Professional", "PersonId")
@@ -449,6 +521,17 @@ namespace ClinexSync.Infrastructure.Data.Migrations
 
                     b.Navigation("Phone")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ClinexSync.Domain.Users.User", b =>
+                {
+                    b.HasOne("ClinexSync.Domain.Users.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("ClinexSync.Domain.Cities.City", b =>

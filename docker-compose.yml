@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  clinexsync.webapi:
+    image: ${DOCKER_REGISTRY-}clinexsyncwebapi
+    container_name: ClinexSync.WebApi
+    build:
+      context: .
+      dockerfile: src/ClinexSync.WebApi/Dockerfile
+    environment:
+     - ASPNETCORE_URLS=http://+:5132
+    ports:
+      - "5132:5132"
+    depends_on:
+      - clinexsync.db
+
+  clinexsync.db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ClinexSync.Db
+    environment:
+       SA_PASSWORD: "P@ssw0rd123"
+       SA_DB: "ClinexSyncDb"
+       ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./.containers/database:/var/lib/postgresql/data
+
+  clinexsync-identity:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: ClinexSync.Identity
+    command: start-dev --import-realm
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    volumes:
+       - ./.containers/identity:/opt/keycloak/data
+    ports:
+      - 8080:8080
+
+volumes:
+  dbdata: 

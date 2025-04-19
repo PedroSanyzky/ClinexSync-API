@@ -1,5 +1,5 @@
 ﻿using ClinexSync.Domain.Professionals;
-using ClinexSync.Domain.Shared;
+using ClinexSync.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -16,6 +16,8 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
         builder.HasOne(p => p.Person).WithOne().HasForeignKey<Professional>(p => p.PersonId);
 
         builder.Property(p => p.IdentityId).IsRequired(false);
+
+        builder.HasOne<User>().WithOne().HasForeignKey<Professional>(p => p.IdentityId);
 
         builder.HasIndex(p => p.IdentityId).IsUnique();
 

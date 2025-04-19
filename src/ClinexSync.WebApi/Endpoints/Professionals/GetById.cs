@@ -1,7 +1,6 @@
 ﻿using ClinexSync.Application.Features.Professionals.GetById;
 using ClinexSync.Contracts.Professionals;
 using ClinexSync.Domain.Abstractions;
-using ClinexSync.WebApi.Extensions;
 using ClinexSync.WebApi.Handlers;
 using MediatR;
 
@@ -25,6 +24,7 @@ internal sealed class GetById : IEndpoint
                     return ResultsHandler.CustomResponse(result);
                 }
             )
-            .WithTags(Tags.Professionals);
+            .WithTags(Tags.Professionals)
+            .RequireAuthorization();
     }
 }

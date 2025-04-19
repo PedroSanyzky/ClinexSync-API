@@ -24,6 +24,7 @@ internal sealed class GetAreas : IEndpoint
                     return ResultsHandler.CustomResponse(result);
                 }
             )
-            .WithTags(Tags.Professionals);
+            .WithTags(Tags.Professionals)
+            .RequireAuthorization();
     }
 }

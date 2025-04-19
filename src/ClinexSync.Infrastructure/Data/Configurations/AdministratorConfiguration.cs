@@ -1,4 +1,5 @@
 ﻿using ClinexSync.Domain.Administrators;
+using ClinexSync.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -15,6 +16,8 @@ public class AdministratorConfiguration : IEntityTypeConfiguration<Administrator
         builder.HasOne(a => a.Person).WithOne().HasForeignKey<Administrator>(a => a.PersonId);
 
         builder.Property(a => a.IdentityId).IsRequired(false);
+
+        builder.HasOne<User>().WithOne().HasForeignKey<Administrator>(a => a.IdentityId);
 
         builder.HasIndex(a => a.IdentityId).IsUnique();
     }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClinexSync.Contracts.Areas;
-using ClinexSync.Contracts.Persons;
+﻿using ClinexSync.Contracts.Persons;
 
 namespace ClinexSync.Contracts.Professionals;
 
