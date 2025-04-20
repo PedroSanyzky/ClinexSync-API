@@ -9,10 +9,12 @@
 - **Entity Framework Core** con migraciones automáticas  
 - **Serilog** para logging estructurado  
 - **Asp.Versioning** para control de versiones de la API  
+- **CQRS + Mediator** para separar logica de lectura y escritura en db.
+- **Fluent Validation** para validar commands y queries.    
 - **Swagger** (Swashbuckle) para documentación interactiva  
 - **Keycloak** + JWT para autenticación y autorización  
 - **Docker** y **Docker Compose** para contenerización  
-
+- **TODO: Completar**
 ## Arquitectura
 
 Se sigue el patrón **Clean Architecture**:
@@ -27,3 +29,4 @@ Se sigue el patrón **Clean Architecture**:
 
 ```bash
 docker-compose up --build
+
